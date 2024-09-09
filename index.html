@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analog Watch</title>
+    <!-- <link rel="script" href="script.js"> -->
+    <script>
+        function rotation(){
+            var canvas = document.getElementById('canvas');
+            var ctx = canvas.getContext('2d');
+            var radius = canvas.height / 2;
+            ctx.translate(radius, radius);
+            radius = radius * 0.90;
+            drawClockFace(ctx, radius);
+            // clockHand(ctx, radius*0.5, radius*0.07);
+            secondsHand(ctx, 0, radius*0.9, radius*0.02);
+            hourHand(ctx, 0, radius*0.5, radius*0.07);
+            minuteHand(ctx, 0, radius*0.7, radius*0.07);
+            // clockBelt(ctx, radius);
+            clockNumbers(ctx, radius);
+        }
+        function drawClockFace(ctx, radius){
+            var grad;
+            ctx.beginPath();
+            ctx.arc(0, 0, radius, 0, 2*Math.PI);
+            ctx.fillStyle = "white";
+            ctx.fill();
+            grad = ctx.createRadialGradient(0, 0, radius*0.95, 0, 0, radius*1.05);
+            grad.addColorStop(0, '#333');
+            grad.addColorStop(0.5, 'white');
+            grad.addColorStop(1, '#333');
+            ctx.strokeStyle = grad;
+            ctx.lineWidth = radius*0.1;
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.arc(0, 0, radius*0.1, 0, 2*Math.PI);
+            ctx.fillStyle = '#333';
+            ctx.fill();
+        }
+        function clockHand(ctx, length, width){
+            ctx.beginPath();
+            ctx.lineWidth = width;
+            ctx.lineCap = "round";
+            ctx.moveTo(0, 0);
+            ctx.lineTo(0, -length);
+            ctx.stroke();
+        }
+        function clockBelt(ctx, radius){
+            ctx.beginPath();
+            ctx.arc(0, 0, radius*0.1, 0, 2*Math.PI);
+            ctx.fillStyle = '#333';
+            ctx.fill();
+        }
+        function clockNumbers(ctx, radius){
+            var ang;
+            var num;
+            ctx.font = radius*0.15 + "px arial";
+            ctx.textBaseline = "middle";
+            ctx.textAlign = "center";
+            for(num = 1; num < 13; num++){
+                ang = num * Math.PI / 6;
+                ctx.rotate(ang);
+                ctx.translate(0, -radius*0.85);
+                ctx.rotate(-ang);
+                ctx.fillText(num.toString(), 0, 0);
+                ctx.rotate(ang);
+                ctx.translate(0, radius*0.85);
+                ctx.rotate(-ang);
+            }
+        }
+        function secondsHand(ctx, angle, length, width){
+            ctx.beginPath();
+            ctx.lineWidth = width;
+            ctx.lineCap = "round";
+            ctx.moveTo(0, 0);
+            ctx.rotate(angle);
+            ctx.lineTo(0, -length);
+            ctx.stroke();
+            ctx.rotate(-angle);
+        }
+        function hourHand(ctx, angle, length, width){
+            ctx.beginPath();
+            ctx.lineWidth = width;
+            ctx.lineCap = "round";
+            ctx.moveTo(0, 0);
+            ctx.rotate(angle);
+            ctx.lineTo(0, -length);
+            ctx.stroke();
+            ctx.rotate(-angle);
+        }
+        function minuteHand(ctx, angle, length, width){
+            ctx.beginPath();
+            ctx.lineWidth = width;
+            ctx.lineCap = "round";
+            ctx.moveTo(0, 0);
+            ctx.rotate(angle);
+            ctx.lineTo(0, -length);
+            ctx.stroke();
+            ctx.rotate(-angle);
+        }
+    </script>
+    </script>
+</head>
+<body>
+    <canvas  id="canvas" width="400" height="400" style="background-color: #f1f1f1" onclick="rotation()"></canvas>
+</body>
+</html>
