@@ -70,6 +70,25 @@
                 ctx.rotate(-ang);
             }
         }
+        // split('').reverse().join('');
+        function mirrorClockNumbers(ctx, radius){
+            var ang;
+            var num;
+            ctx.font = radius*0.15 + "px arial";
+            ctx.textBaseline = "middle";
+            ctx.textAlign = "center";
+            for(num = -12; num <=-1; num++){
+                ang = num * Math.PI / 6;
+                ctx.rotate(ang);
+                ctx.translate(0, -radius*0.85);
+                ctx.rotate(-ang);
+                ctx.fillText((num*-1).toString(), 0, 0);
+                ctx.rotate(ang);
+                ctx.translate(0, radius*0.85);
+                ctx.rotate(-ang);
+            }
+        }
+
         function secondsHand(ctx, angle, length, width){
             ctx.beginPath();
             ctx.lineWidth = width;
@@ -80,6 +99,7 @@
             ctx.stroke();
             ctx.rotate(-angle);
         }
+
         function hourHand(ctx, angle, length, width){
             ctx.beginPath();
             ctx.lineWidth = width;
@@ -90,6 +110,7 @@
             ctx.stroke();
             ctx.rotate(-angle);
         }
+
         function minuteHand(ctx, angle, length, width){
             ctx.beginPath();
             ctx.lineWidth = width;
@@ -100,6 +121,7 @@
             ctx.stroke();
             ctx.rotate(-angle);
         }
+
         function minHourNSecondHandRotation(ctx,radius){
             var now = new Date();
             var hour = now.getHours();
@@ -108,11 +130,27 @@
             var hourAngle = (hour%12 + minute/60) * Math.PI / 6;
             var minuteAngle = (minute + second/60) * Math.PI / 30;
             var secondAngle = second * Math.PI / 30;
+            // console.log(hourAngle,minuteAngle,secondAngle);
             hourHand(ctx, hourAngle, radius*0.5, radius*0.07);
             minuteHand(ctx, minuteAngle, radius*0.7, radius*0.07);
             secondsHand(ctx, secondAngle, radius*0.9, radius*0.02);
             // console.log(hour, minute, second);
         }
+
+        function mirrorMinHourNSecondHandRotation(ctx,radius){
+            var now = new Date();
+            var hour = now.getHours();
+            var minute = now.getMinutes();
+            var second = now.getSeconds();
+            var hourAngle = (hour%12 + minute/60) * Math.PI / 6;
+            var minuteAngle = (minute + second/60) * Math.PI / 30;
+            var secondAngle = second * Math.PI / 30;
+            hourHand(ctx, 6.17-hourAngle, radius*0.5, radius*0.07);
+            minuteHand(ctx, 6.17-minuteAngle, radius*0.7, radius*0.07);
+            secondsHand(ctx, 6.17-secondAngle, radius*0.9, radius*0.02);
+            // console.log(hour, minute, second);
+        }
+
         function autoUpdate(ctx,radius){
             setInterval(function(){
                 ctx.clearRect(-radius, -radius, 2*radius, 2*radius);
@@ -121,10 +159,36 @@
                 clockNumbers(ctx, radius);
             }, 1000);
         }
+
+        function mirrorAutoUpdate(ctx,radius){
+            setInterval(function(){
+                ctx.clearRect(-radius, -radius, 2*radius, 2*radius);
+                drawClockFace(ctx, radius);
+                mirrorMinHourNSecondHandRotation(ctx,radius);
+                mirrorClockNumbers(ctx, radius);
+            }, 1000);
+        }
+
+        function createClockMirrorImage(){
+            var canvas = document.getElementById('mirrorCanvas');
+            // console.log(canvas);
+            var ctx = canvas.getContext('2d');
+            // console.log(ctx);
+            var radius = canvas.height / 2;
+            ctx.translate(radius, radius);
+            radius = radius * 0.90;
+            drawClockFace(ctx, radius);
+            mirrorAutoUpdate(ctx,radius);
+            mirrorClockNumbers(ctx,radius);
+        }
+
     </script>
     </script>
 </head>
 <body>
     <canvas  id="canvas" width="400" height="400" style="background-color: #f1f1f1" onclick="rotation()"></canvas>
+    <canvas id="mirrorCanvas" width="400" height="400" style="position: 500px 500px; background-color: #f1f1f1;" onclick="createClockMirrorImage()"></canvas>
 </body>
 </html>
+
+<!-- hr@dreamescape.co.in -->
